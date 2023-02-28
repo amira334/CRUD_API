@@ -17,9 +17,28 @@ namespace CRUD_API.Controllers
         }
 
         [HttpGet("{id:int}")]
-        public ProductDTO GetProducts(int id)
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
+        [ProducesResponseType(400)]
+        public ActionResult<ProductDTO> GetProduct(int id)
         {
-            return ProductList.productList.FirstOrDefault(u => u.ProductId == id);
+            if(id == 0)
+            {
+                return BadRequest();
+            }
+
+
+            var product = ProductList.productList.FirstOrDefault(u => u.ProductId == id);
+            if(product == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(product);
+
+
         }
     } 
 }
+
+
