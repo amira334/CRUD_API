@@ -42,7 +42,7 @@ namespace CRUD_API.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public ActionResult<ProductDTO> CreateProduct([FromBody] ProductDTO productDTO)
         {
             if (productDTO == null)
