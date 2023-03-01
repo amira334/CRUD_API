@@ -16,10 +16,10 @@ namespace CRUD_API.Controllers
             return Ok(ProductList.productList);
         }
 
-        [HttpGet("{id:int}")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(400)]
+        [HttpGet("{id:int}", Name ="GetProduct")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public ActionResult<ProductDTO> GetProduct(int id)
         {
             if(id == 0)
@@ -38,7 +38,30 @@ namespace CRUD_API.Controllers
 
 
         }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<ProductDTO> CreateProduct([FromBody] ProductDTO productDTO)
+        {
+            if (productDTO == null)
+            {
+                return BadRequest(productDTO);
+            }
+            if (productDTO.ProductId > 0)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError);
+            }
+            productDTO.ProductId = ProductList.productList.OrderByDescending(u => u.ProductId).FirstOrDefault().ProductId + 1;
+            ProductList.productList.Add(productDTO);
+
+            return CreatedAtRoute("GetProduct", new { id = productDTO.ProductId}, productDTO);
+
+        }
     } 
 }
+
+// 
 
 
