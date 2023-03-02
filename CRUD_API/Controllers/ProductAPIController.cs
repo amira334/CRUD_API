@@ -1,6 +1,7 @@
 ﻿using CRUD_API.Data;
 using CRUD_API.models;
 using CRUD_API.models.DTO;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel;
 
@@ -37,7 +38,6 @@ namespace CRUD_API.Controllers
 
             return Ok(product);
             
-
         }
 
         [HttpPost]
@@ -94,10 +94,11 @@ namespace CRUD_API.Controllers
 
         }
 
+     
+        [HttpPut("{id:int}", Name = "UpdateProduct")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [HttpPut("{id:int}", Name = "UpdateProduct")]
 
         public IActionResult UpdateProduct(int id, [FromBody]ProductDTO productDTO)
         {
@@ -114,9 +115,28 @@ namespace CRUD_API.Controllers
             return NoContent();
         }
 
+        [HttpPatch("{id:int}", Name = "UpdatePartialProduct")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public IActionResult UpdatePartialProduct(int id, JsonPatchDocument<ProductDTO> patchDTO)
+        {
+            if (patchDTO == null || id == 0)
+            {
+                return BadRequest();
+            }
+            var product = ProductList.productList.FirstOrDefault(u => u.ProductId == id);
+            if (product == null)
+            {
+                return BadRequest();
+            }
+            patchDTO.ApplyTo(product, ModelState);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            return NoContent();
+
+        }
+
     } 
 }
-
-// 
-
-
