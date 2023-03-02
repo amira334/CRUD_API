@@ -11,4 +11,3 @@ namespace CRUD_API.Data
         };
     }
 }
-
