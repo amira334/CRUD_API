@@ -1,15 +1,16 @@
 ﻿using CRUD_API.models.Dto;
 using CRUD_API.models;
+using CRUD_API.Data;
 
 namespace CRUD_API.Services
 {
-    public class UserServicec
+    public class UserService
     {
         private readonly DatabaseContext _dbContext;
 
         public UserService(DatabaseContext dbContext)
         {
-            _dbContext = dbContext;
+            _dbContext = dbContext; //
         }
 
         public User Authenticate(LoginDTO loginDTO)
@@ -52,10 +53,10 @@ namespace CRUD_API.Services
             return user;
         }
 
-        public async Task<User> Register(RegisterDto registerDto)
+        public async Task<User> Register(RegisterDTO registerDTO)
         {
             // Check if username already exists
-            if (_dbContext.Users.Any(u => u.Username == registerDto.Username))
+            if (_dbContext.Users.Any(u => u.Username == registerDTO.Username))
             {
                 throw new ApplicationException("Username already exists");
             }
@@ -63,15 +64,15 @@ namespace CRUD_API.Services
             // Create new user object
             var user = new User
             {
-                Username = registerDto.Username,
-                FirstName = registerDto.FirstName,
-                LastName = registerDto.LastName,
-                Email = registerDto.Email,
-                Role = registerDto.Role
+                Username = registerDTO.Username,
+                FirstName = registerDTO.FirstName,
+                LastName = registerDTO.LastName,
+                Email = registerDTO.Email,
+                Role = registerDTO.Role
             };
 
             // Hash password
-            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerDto.Password);
+            user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerDTO.Password);
 
             // Save user to database
             _dbContext.Users.Add(user);

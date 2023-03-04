@@ -1,4 +1,5 @@
 ﻿using CRUD_API.models;
+using CRUD_API.models.DTO;
 using Microsoft.EntityFrameworkCore;
 
 namespace CRUD_API.Data
